@@ -1,0 +1,15 @@
+<config>
+	<int>
+		<MAX_MSG_LEN>4096</MAX_MSG_LEN>
+		<SERWER_PORT>1666</SERWER_PORT>
+		<MAX_CONNECTION>1000</MAX_CONNECTION>
+	</int>
+	<bool>
+	</bool>
+	<string>
+		<SERWER_IP>127.0.0.1</SERWER_IP>
+	</string>
+	<double>
+
+	</double>
+</config>

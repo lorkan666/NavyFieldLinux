@@ -1,0 +1,14 @@
+<config>
+	<int>
+		<width>20000</width>
+		<height>10000</height>	
+	</int>
+	<bool>
+	</bool>
+	<string>
+		<name>Clear Ocean</name>
+		<map_img>water.jpg</map_img>
+	</string>
+	<double>
+	</double>
+</config>

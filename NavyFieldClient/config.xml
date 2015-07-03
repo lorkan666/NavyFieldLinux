@@ -1,0 +1,27 @@
+<config>
+	<int>
+		<width>640</width>
+		<height>480</height>
+		<MAX_FPS>100</MAX_FPS>
+		<protocol_id>4289335860</protocol_id>
+		
+		
+		<server_port>30000</server_port>
+		<client_port>30001</client_port>
+	</int>
+	<bool>
+		<fullscreen>false</fullscreen>
+		<keep_alive>true</keep_alive>
+	</bool>
+	<string>
+		<server_ip>127.0.0.1</server_ip>
+		<player_name>lorkan</player_name>
+		<ships_directory>ships#separator#</ships_directory>
+		<maps_dir>maps#separator#</maps_dir>
+		<aim_bar_img>gfx#separator#aim_bar.png</aim_bar_img>
+		<login_img>gfx#separator#loginscreen.jpg</login_img>
+	</string>
+	<double>
+		<timeout>10.0</timeout>
+	</double>
+</config>
