@@ -17,6 +17,7 @@ Game::Game()
 	Uint32 flags = SDL_HWSURFACE ;
 	if(getBoolProperty("fullscreen"))
 		flags|=SDL_FULLSCREEN;
+
     gameSurface = SDL_SetVideoMode( getIntProperty("width"), getIntProperty("height"), 32, flags );//| SDL_FULLSCREEN
 	if(gameSurface == NULL){
 		 SDL_Quit();
