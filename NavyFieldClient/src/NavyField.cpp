@@ -1,6 +1,6 @@
 
 #define MARKUP_STL
-#include "Game.h"
+#include "MyGame.h"
 #include "LoginScreen.h"
 #include "BattleScreen.h"
 #include "MenuScreen.h"
@@ -12,7 +12,7 @@
 int main(int argc, char *argv[])
 {
 	try{
-		Game * g = new Game();
+		MyGame * g = new MyGame();
 		int portArg;
 		if(argc>1){
 			istringstream iss(argv[1]);
@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
 		if(g == NULL)
 			throw string(SDL_GetError());
 
-		g->addScreen(new BattleScreen("battle"));
-		g->addScreen(new MenuScreen("menu"));
+		//g->addScreen(new BattleScreen("battle"));
+		//g->addScreen(new MenuScreen("menu"));
 		g->addScreen(new LoginScreen("login"));
 
 		g->start();

@@ -2,12 +2,12 @@
 #define view_h
 
 #include <SDL/SDL.h>
-#include <functional>
 #include <list>
 #include <iostream>
 
 #include "OnKeyboardEventListener.h"
 #include "OnMouseEventListener.h"
+#include <functional>
 using namespace std;
 
 class ViewGroup;
@@ -15,7 +15,9 @@ class View: public OnMouseEventListener, public OnKeyboardEventListener
 {
 
 public:
-	typedef void (*OnMouseClickCallback)(int x, int y, View * v) ;
+	//typedef void (*OnMouseClickCallback)(int x, int y, View * v) ;
+
+	typedef std::function<void (int x, int y, View * v)> OnMouseClickCallback;
 	typedef void (*OnKeyCallback)(SDL_KeyboardEvent key, View * v) ;
 
 	friend class ViewGroup;

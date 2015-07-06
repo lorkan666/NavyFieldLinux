@@ -18,39 +18,53 @@ Portier::Portier():MyUDPConnection() {
 	std::stringstream ss;
 	ss << std::hex << getStringProperty("protocol_id");
 	ss >> this->protocol_id;
+	cout<<getStringProperty("protocol_id")<<endl;
 
-	this->start(Address(0,getIntProperty("30000")));
+	this->start(Address(0,getIntProperty("server_port")));
 }
 
 void Portier::onPacketSent(MyPacket p, Address address) {
+	MyUDPConnection::onPacketSent( p, address);
 }
 
 void Portier::onPacketNoneSent(MyPacket p, Address address) {
+	MyUDPConnection::onPacketNoneSent( p, address);
 }
 
 void Portier::onPacketReceived(MyPacket p, Address address) {
-	if(!loged_players.contains(address)){ // pierwszy pakiet musi być pakietem logowania
+	unsigned char code = *p.getDataPointer();
+	switch(code){
+	case 0xC1:
 		LoginPacket lp = LoginPacket(p);
-		if(isPlayerExist(lp)){
-			PlayerInfo pi = PlayerInfo(lp.login,address);
-			loged_players.push_back(pi);
-		}else{
-			this->disconnect(address);
+		if(isPlayerExist(lp.login, lp.password)){
+			virtual_connections.get(address)->keeping_alive = true;
 		}
-		return;
+		break;
 	}
+	MyUDPConnection::onPacketReceived( p, address);
 }
 
 void Portier::onPacketDelivered(MyPacket p, Address address) {
+	MyUDPConnection::onPacketDelivered( p, address);
 }
 
 void Portier::onPacketLost(MyPacket p, Address address) {
+	MyUDPConnection::onPacketLost( p, address);
 }
 
 Portier::~Portier() {
 	stop();
 }
 
-bool Portier::isPlayerExist(LoginPacket lp) {
-	return true;
+void Portier::onConnect(ConnectionInfo& ci) {
+}
+
+void Portier::onDisconnect(ConnectionInfo& ci) {
+}
+
+void Portier::onConnectFailed(ConnectionInfo& ci) {
+}
+
+bool Portier::isPlayerExist(string name, string hashed_password) {
+	return name.size() == 6;
 }

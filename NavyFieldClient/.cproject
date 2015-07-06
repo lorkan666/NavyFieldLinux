@@ -25,6 +25,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ViewApi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MySockets}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NavyFieldServer}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1060663042" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1816752783" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
@@ -93,6 +94,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ViewApi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MySockets}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NavyFieldServer}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1920693133" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NDEBUG"/>
@@ -162,6 +164,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ViewApi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MySockets}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NavyFieldServer}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.2118292887" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1510329921" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>

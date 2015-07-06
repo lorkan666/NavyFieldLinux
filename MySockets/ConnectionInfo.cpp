@@ -6,6 +6,7 @@
  */
 
 #include "ConnectionInfo.h"
+#include "ConnectionListener.h"
 #include <iostream>
 #include <map>
 #include "AckSystem.h"
@@ -17,7 +18,7 @@ ConnectionInfo::ConnectionInfo() {
 	state = Disconnected;
 	timeoutAccumulator = 0.0;
 	keeping_alive=false;
-	cl=NULL;
+	//cl=NULL;
 	acks_sys = AckSystem(0xFFFFFFFF);
 }
 
@@ -26,36 +27,21 @@ void ConnectionInfo::setState(State s){
 	state = s;
 	switch(state){
 	case Disconnected:
-		onDisconnect(*this);
+		if(cl != NULL)
+			cl->onDisconnect(*this);
 		break;
 	case Connected:
-		onConnect(*this);
+		if(cl != NULL)
+			cl->onConnect(*this);
 		break;
 	case ConnectFail:
-		onConnectFailed(*this);
+		if(cl != NULL)
+			cl->onConnectFailed(*this);
 		break;
 	}
 }
 
 ConnectionInfo::~ConnectionInfo() {
-	if(cl != NULL)
-		delete cl;
-}
-
-
-void ConnectionInfo::onConnect(ConnectionInfo &ci) {
-	if(cl != NULL)
-		cl->onConnect(ci);
-}
-
-void ConnectionInfo::onDisconnect(ConnectionInfo &ci) {
-	if(cl != NULL)
-		cl->onDisconnect(ci);
-}
-
-void ConnectionInfo::onConnectFailed(ConnectionInfo &ci) {
-	if(cl != NULL)
-		cl->onConnectFailed(ci);
 }
 
 void ConnectionInfo::setConnectionListener(ConnectionListener * cl) {

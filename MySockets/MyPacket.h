@@ -35,8 +35,8 @@ public:
 	bool isDelivered();
 	static void writeInt( unsigned char * data, unsigned int value );
 	static void writeInt( unsigned int * data, unsigned int value );
-	unsigned int readInt( unsigned char * data);
-	unsigned int readInt( unsigned int * data);
+	static unsigned int readInt( unsigned char * data);
+	static unsigned int readInt( unsigned int * data);
 	unsigned int getAck() ;
 	void setAck(unsigned int ack);
 	unsigned int getAcksRecent() ;
@@ -55,7 +55,7 @@ public:
 	bool delivered;
 	bool operator ==( const MyPacket & v );
 
-private:
+protected:
 	PacketHeader * header;
 	char * data;
 	int size;

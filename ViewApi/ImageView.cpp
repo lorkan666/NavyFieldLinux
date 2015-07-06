@@ -108,3 +108,4 @@ ImageView::~ImageView(void)
 	if(img != NULL)
 		SDL_FreeSurface( img );
 }
+

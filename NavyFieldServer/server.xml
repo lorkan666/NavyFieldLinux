@@ -8,7 +8,7 @@
 		<keep_alive>true</keep_alive>
 	</bool>
 	<string>
-		<SERWER_IP>127.0.0.1</SERWER_IP>
+		<server_ip>127.0.0.1</server_ip>
 		<protocol_id>FFAAAAFF</protocol_id>
 	</string>
 	<double>

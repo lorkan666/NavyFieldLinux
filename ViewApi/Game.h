@@ -5,17 +5,13 @@
 #include <list>
 
 #include "PropertiesConfigReader.h"
-#include "MySockets.h"
 
 using namespace std;
 
-class MyUDPConnection;
 class GameScreen;
 class Game: public PropertiesConfigReader
 {
 public:
-	MyUDPConnection *connection;
-	Address server_address;
 	int width, height;
 	Game();
 	void nextScreen();
@@ -25,7 +21,7 @@ public:
 	void addScreen(GameScreen*);
 
 	~Game(void);
-	void start(void);
+	virtual void start(void);
 
 private:
 	Uint32 frames;

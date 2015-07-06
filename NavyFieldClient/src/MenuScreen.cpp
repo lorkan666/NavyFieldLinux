@@ -24,10 +24,10 @@ void MenuScreen::enter(){
 	stage->addView(hbox);
 
 	SimpleButton * connectButton = new SimpleButton("Connect");
-	connectButton->setOnMouseClickCallback([](int x, int y, View * v){});
+	//connectButton->setOnMouseClickCallback([](int x, int y, View * v){});
 	SimpleButton * settingsButton = new SimpleButton("Settings");
 	SimpleButton * quitButton = new SimpleButton("Quit");
-	quitButton->setOnMouseClickCallback([](int x, int y, View * v){});
+	//quitButton->setOnMouseClickCallback([](int x, int y, View * v){});
 		
 	hbox->addView(connectButton);
 	hbox->addView(settingsButton);

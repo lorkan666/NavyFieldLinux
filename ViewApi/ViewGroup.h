@@ -7,6 +7,7 @@ class ViewGroup :public ViewParent
 {
 public:
 	virtual void addView(View *);
+	virtual void addView(View *,int pos);
 	virtual void removeView(View *);
 	virtual void removeViewAndDelete(View *);
 	virtual void draw(SDL_Surface *, int);

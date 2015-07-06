@@ -72,7 +72,10 @@ void MyUDPConnection::connect(const Address& address) {
 	if(virtual_connections.contains(address))
 		return;
 	ConnectionInfo  new_connection =  ConnectionInfo();
+	if(cl != NULL)
+		new_connection.setConnectionListener(cl);
 	new_connection.address = address;
+	new_connection.keeping_alive = this->keeping_alive;
 	new_connection.mode = ConnectionInfo::Server;
 	new_connection.last_send_time = 0;
 	new_connection.acks_sys.setPacketListener(this);
@@ -173,28 +176,31 @@ int MyUDPConnection::receivePacket(MyPacket& rp) {
 	if(!virtual_connections.contains(sender)){
 		if(info.mode != ConnectionInfo::Client){
 			ConnectionInfo  new_connection =  ConnectionInfo();
+			new_connection.keeping_alive = this->keeping_alive;
 			new_connection.address = sender;
 			new_connection.mode = ConnectionInfo::Client;
 			new_connection.last_send_time = time(NULL);
 			new_connection.timeoutAccumulator = 0;
-			new_connection.setState(ConnectionInfo::Connected);
 			new_connection.acks_sys.setPacketListener(this);
 			new_connection.acks_sys.packetReceived(p);
 			new_connection.acks_sys.processAck(p);
 			if(cl != NULL)
 				new_connection.setConnectionListener(cl);
+			new_connection.setState(ConnectionInfo::Connected);
 			virtual_connections.push_back(new_connection);
 		}
 	}else{
 		ConnectionInfo *ci = virtual_connections.get(sender);
+		if(cl != NULL)
+			ci->setConnectionListener(cl);
 		if(ci->state == ConnectionInfo::Connecting )
 			ci->setState(ConnectionInfo::Connected);
 		ci->timeoutAccumulator = 0.0;
+		ci->keeping_alive = this->keeping_alive;
 		ci->acks_sys.setPacketListener(this);
 		ci->acks_sys.packetReceived(p);
 		ci->acks_sys.processAck(p);
-		if(cl != NULL)
-			ci->setConnectionListener(cl);
+
 	}
 	rp=p;
 	onPacketReceived(rp,sender);

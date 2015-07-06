@@ -10,10 +10,11 @@
 
 #include <PropertiesConfigReader.h>
 #include <MyUDPConnection.h>
-#include "PlayerInfoList.h"
+#include "ConnectionInfoList.h"
+#include "ConnectionListener.h"
 #include "GameProtocol.h"
 
-class Portier: public PropertiesConfigReader, public MyUDPConnection {
+class Portier: public PropertiesConfigReader, public MyUDPConnection, public ConnectionListener {
 public:
 	Portier();
 	virtual void onPacketSent(MyPacket p, Address address);
@@ -21,10 +22,12 @@ public:
 	virtual void onPacketReceived(MyPacket p, Address address);
 	virtual void onPacketDelivered(MyPacket p, Address address);
 	virtual void onPacketLost(MyPacket p, Address address);
+	virtual void onConnect(ConnectionInfo &ci);
+	virtual void onDisconnect(ConnectionInfo &ci);
+	virtual void onConnectFailed(ConnectionInfo &ci);
 	virtual ~Portier();
 private:
-	PlayerInfoList loged_players;
-	bool isPlayerExist(LoginPacket lp);
+	bool isPlayerExist(string name, string hashed_password);
 };
 
 #endif /* PORTIER_H_ */

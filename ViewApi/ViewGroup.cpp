@@ -17,6 +17,20 @@ void ViewGroup::addView(View * v){
 	this->need_update_layout=1;
 }
 
+void ViewGroup::addView(View* v, int pos) {
+	if(v == NULL)
+		throw string("Error in: "+string(__PRETTY_FUNCTION__)+" details: View is NULL");
+	std::list<View *>::iterator iter;
+	iter = childs.begin();
+	while(pos>0 && iter != childs.end()){
+		iter++;
+		pos--;
+	}
+	childs.insert(iter,v);
+	v->parent = this;
+	this->need_update_layout=1;
+}
+
 void ViewGroup::removeView(View * v){
 	childs.remove(v);
 	this->need_update_layout=1;
@@ -151,3 +165,4 @@ ViewGroup::~ViewGroup(void)
 		delete *iter;
 	}
 }
+

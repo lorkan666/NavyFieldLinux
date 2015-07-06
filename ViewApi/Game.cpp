@@ -26,18 +26,6 @@ Game::Game()
 	this->width = gameSurface->w;
 	this->height = gameSurface->h;	
 	currentScreen=screens.begin();
-
-	unsigned int protocol_id;
-	std::stringstream ss;
-	ss << std::hex << getStringProperty("protocol_id");
-	ss >> protocol_id;
-
-	connection = new MyUDPConnection(protocol_id);
-	connection->setTimeout(getDoubleProperty("timeout"));
-	connection->keepAlive(getBoolProperty("keep_alive"));
-	connection->setMode(ConnectionInfo::Client);
-	server_address = Address(getStringProperty("server_ip"),(unsigned int)getIntProperty("server_port"));
-
 }
 
 void Game::addScreen(GameScreen* gs){
@@ -53,7 +41,6 @@ void Game::start(void){
 	if(screens.size() <= 0){
 		return;
 	}
-	connection->start(Address(0,getIntProperty("client_port")));
 
 	SDL_Event event;
 	wyjscie = false;
@@ -161,8 +148,6 @@ void Game::quit(){
 
 Game::~Game(void)
 {
-	if(connection != NULL)
-		delete connection;
 	list<GameScreen*>::iterator i;
 	for(i = screens.begin(); i != screens.end(); i++ )
 	{

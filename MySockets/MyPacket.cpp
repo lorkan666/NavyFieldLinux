@@ -10,6 +10,7 @@
 
 MyPacket::MyPacket() {
 	data = new char[MTU];
+	memset(data,0,MTU);
 	delivered = false;
 	time=0;
 	size = getHeaderSize();
