@@ -35,6 +35,7 @@ public:
 	virtual ~ConnectionInfo();
 	Address address;
 	AckSystem acks_sys;
+	bool keeping_alive;
 	void setState(ConnectionInfo::State s);
 	void setConnectionListener(ConnectionListener * cl);
 	virtual void onConnect(ConnectionInfo &ci);

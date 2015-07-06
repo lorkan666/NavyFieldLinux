@@ -1,15 +1,17 @@
 <config>
 	<int>
 		<MAX_MSG_LEN>4096</MAX_MSG_LEN>
-		<SERWER_PORT>1666</SERWER_PORT>
+		<server_port>30000</server_port>
 		<MAX_CONNECTION>1000</MAX_CONNECTION>
 	</int>
 	<bool>
+		<keep_alive>true</keep_alive>
 	</bool>
 	<string>
 		<SERWER_IP>127.0.0.1</SERWER_IP>
+		<protocol_id>FFAAAAFF</protocol_id>
 	</string>
 	<double>
-
+		<timeout>10.0</timeout>
 	</double>
 </config>

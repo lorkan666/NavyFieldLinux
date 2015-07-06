@@ -29,3 +29,11 @@ ConnectionInfo* ConnectionInfoList::get(Address adr) {
 ConnectionInfoList::~ConnectionInfoList() {
 }
 
+void ConnectionInfoList::remove(Address adr) {
+	list<ConnectionInfo>::iterator itor;
+	for ( itor = begin(); itor != end(); ++itor )
+		if ( itor->address == adr ){
+			this->erase(itor);
+			break;
+		}
+}

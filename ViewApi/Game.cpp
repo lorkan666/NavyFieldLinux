@@ -27,7 +27,12 @@ Game::Game()
 	this->height = gameSurface->h;	
 	currentScreen=screens.begin();
 
-	connection = new MyUDPConnection(getIntProperty("protocol_id"));
+	unsigned int protocol_id;
+	std::stringstream ss;
+	ss << std::hex << getStringProperty("protocol_id");
+	ss >> protocol_id;
+
+	connection = new MyUDPConnection(protocol_id);
 	connection->setTimeout(getDoubleProperty("timeout"));
 	connection->keepAlive(getBoolProperty("keep_alive"));
 	connection->setMode(ConnectionInfo::Client);
@@ -138,6 +143,16 @@ void Game::previousScreen(){
 }
 
 void Game::changeScreen(string name){
+	list<GameScreen*>::iterator i;
+	for(i = screens.begin(); i != screens.end(); i++ )
+	{
+		if((*i)->name.compare(name) == 0){
+			(*currentScreen)->leave();
+			currentScreen=i;
+			(*currentScreen)->enter();
+			break;
+		}
+	}
 }
 
 void Game::quit(){

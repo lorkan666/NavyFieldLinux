@@ -2,9 +2,7 @@
 	<int>
 		<width>640</width>
 		<height>480</height>
-		<MAX_FPS>100</MAX_FPS>
-		<protocol_id>4289335860</protocol_id>
-		
+		<MAX_FPS>100</MAX_FPS>	
 		
 		<server_port>30000</server_port>
 		<client_port>30001</client_port>
@@ -15,6 +13,7 @@
 	</bool>
 	<string>
 		<server_ip>127.0.0.1</server_ip>
+		<protocol_id>FFAAAAFF</protocol_id>
 		<player_name>lorkan</player_name>
 		<ships_directory>ships#separator#</ships_directory>
 		<maps_dir>maps#separator#</maps_dir>

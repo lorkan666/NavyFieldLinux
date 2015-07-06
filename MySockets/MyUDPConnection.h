@@ -48,21 +48,24 @@ public:
 	virtual void update( float delta);
 	void removeDisconnected();
 	void connect( const Address & address );
+	void disconnect( Address address );
 	float getTimeout() const;
 	void setTimeout(float timeout);
 	virtual ~MyUDPConnection();
 
-private:
+protected:
 	ConnectionInfoList virtual_connections;
+	unsigned int protocol_id;
+	bool keeping_alive;
+
+private:
 	PacketListener * pl;
 	ConnectionListener * cl;
 	float DeltaTime;
 	UDPSocket socket;
-	bool keeping_alive;
 	bool connection_thread_work;
 	ConnectionInfo info;
 	void setState(ConnectionInfo::State s);
-	unsigned int protocol_id;
 	float timeout;
 	std::thread * connection_thread;
 	bool startConnectionThread();

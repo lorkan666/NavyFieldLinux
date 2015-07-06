@@ -48,7 +48,8 @@ bool MyUDPConnection::start(Address address) {
 	if(!socket.setBlocking(false)){
 		return false;
 	}
-	cout<<"Socket opened at "<<address.GetAddress()<<" : "<<address.GetPort()<<endl;
+	cout<<"Socket opened at "<<address.GetAddress()<<" : "<<address.GetPort()<<
+			endl<<"Protocol ID: "<<this->protocol_id<<endl;
 	info.state = ConnectionInfo::Disconnected;
 	return startConnectionThread();
 }
@@ -79,6 +80,23 @@ void MyUDPConnection::connect(const Address& address) {
 	virtual_connections.push_back(new_connection);
 }
 
+bool MyUDPConnection::isConnected(Address& address) {
+	if(! virtual_connections.contains(address))
+		return false;
+	return (virtual_connections.get(address)->state == ConnectionInfo::Connected);
+}
+
+void MyUDPConnection::disconnect(Address address) {
+	if(!virtual_connections.contains(address))
+		return;
+	ConnectionInfo *ci = virtual_connections.get(address);
+	ci->setState(ConnectionInfo::Disconnected);
+	cout<<"virtual_connections: "<<virtual_connections.size()<<endl;
+	virtual_connections.remove(address);
+	cout<<"virtual_connections: "<<virtual_connections.size()<<endl;
+}
+
+
 ConnectionInfo::State MyUDPConnection::getState(Address address) {
 	ConnectionInfo *ci = virtual_connections.get(address);
 	if(ci == NULL)
@@ -103,7 +121,7 @@ void MyUDPConnection::update(float delta) {
 				ci->setState(ConnectionInfo::Disconnected);
 				continue;
 			}
-			if(keeping_alive){
+			if(ci->keeping_alive){
 
 				time_t now = time(NULL);
 
@@ -172,9 +190,9 @@ int MyUDPConnection::receivePacket(MyPacket& rp) {
 		if(ci->state == ConnectionInfo::Connecting )
 			ci->setState(ConnectionInfo::Connected);
 		ci->timeoutAccumulator = 0.0;
+		ci->acks_sys.setPacketListener(this);
 		ci->acks_sys.packetReceived(p);
 		ci->acks_sys.processAck(p);
-		ci->acks_sys.setPacketListener(this);
 		if(cl != NULL)
 			ci->setConnectionListener(cl);
 	}
@@ -303,8 +321,3 @@ void MyUDPConnection::onPacketLost(MyPacket p, Address address) {
 	cout<<"Zgubiony: "<<p<<endl;
 }
 
-bool MyUDPConnection::isConnected(Address& address) {
-	if(! virtual_connections.contains(address))
-		return false;
-	return (virtual_connections.get(address)->state == ConnectionInfo::Connected);
-}

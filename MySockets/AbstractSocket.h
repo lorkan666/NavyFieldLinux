@@ -36,8 +36,8 @@ public:
 		service.sin_port = htons( (unsigned short) port );
 	}
 
-	void setAddress(unsigned short addr){
-		service.sin_addr.s_addr = htons( (unsigned short) addr );
+	void setAddress(unsigned int addr){
+		service.sin_addr.s_addr = htonl( (unsigned int) addr );
 	}
 
 	bool openSocket(){

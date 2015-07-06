@@ -17,6 +17,7 @@ public:
 	ConnectionInfoList();
 	bool contains(Address adr);
 	ConnectionInfo * get(Address adr);
+	void remove(Address adr);
 	virtual ~ConnectionInfoList();
 };
 
