@@ -32,13 +32,14 @@ void Portier::onPacketNoneSent(MyPacket p, Address address) {
 }
 
 void Portier::onPacketReceived(MyPacket p, Address address) {
+	cout<<"SDASDSA"<<endl;
 	unsigned char code = *p.getDataPointer();
 	switch(code){
 	case 0xC1:
-		LoginPacket lp = LoginPacket(p);
-		if(isPlayerExist(lp.login, lp.password)){
-			virtual_connections.get(address)->keeping_alive = true;
-		}
+//		LoginPacket lp = LoginPacket(p);
+//		if(isPlayerExist(lp.login, lp.password)){
+//			virtual_connections.get(address)->keeping_alive = true;
+//		}
 		break;
 	}
 	MyUDPConnection::onPacketReceived( p, address);

@@ -161,9 +161,8 @@ bool MyUDPConnection::sendPacket(MyPacket &p, Address & address) {
 	return true;
 }
 
-int MyUDPConnection::receivePacket(MyPacket& rp) {
+int MyUDPConnection::receivePacket(MyPacket& p) {
 	Address sender;
-	MyPacket p = MyPacket();
 	int bytes_read = socket.receiveData(sender,p.getData(),p.getMaxSize());
 	if(bytes_read < p.getHeaderSize())
 		return 0;
@@ -202,8 +201,7 @@ int MyUDPConnection::receivePacket(MyPacket& rp) {
 		ci->acks_sys.processAck(p);
 
 	}
-	rp=p;
-	onPacketReceived(rp,sender);
+	onPacketReceived(p,sender);
 	return bytes_read - p.getHeaderSize();
 }
 
