@@ -32,7 +32,6 @@ void Portier::onPacketNoneSent(MyPacket p, Address address) {
 }
 
 void Portier::onPacketReceived(MyPacket p, Address address) {
-	cout<<"SDASDSA"<<endl;
 	unsigned char code = *p.getDataPointer();
 	switch(code){
 	case 0xC1:

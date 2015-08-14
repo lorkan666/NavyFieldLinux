@@ -173,7 +173,9 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 	p.setSize(bytes_read);
 	cout<<"Odebrano: "<<p<<endl;
 	if(!virtual_connections.contains(sender)){
+		//cout<<"test 1"<<endl;
 		if(info.mode != ConnectionInfo::Client){
+			//cout<<"test 2"<<endl;
 			ConnectionInfo  new_connection =  ConnectionInfo();
 			new_connection.keeping_alive = this->keeping_alive;
 			new_connection.address = sender;
@@ -183,9 +185,12 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 			new_connection.acks_sys.setPacketListener(this);
 			new_connection.acks_sys.packetReceived(p);
 			new_connection.acks_sys.processAck(p);
-			if(cl != NULL)
+			if(cl != NULL){
+				cout<<"Connection listener not null\n";
 				new_connection.setConnectionListener(cl);
+			}
 			new_connection.setState(ConnectionInfo::Connected);
+			//cout<<"test 4"<<endl;
 			virtual_connections.push_back(new_connection);
 		}
 	}else{
@@ -201,6 +206,7 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 		ci->acks_sys.processAck(p);
 
 	}
+	//cout<<"test 3"<<endl;
 	onPacketReceived(p,sender);
 	return bytes_read - p.getHeaderSize();
 }
