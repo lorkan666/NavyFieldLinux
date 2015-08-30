@@ -53,18 +53,19 @@ public:
 	unsigned int length;
 	LoginPacket(MyPacket & p){
 		length = MyPacket::readInt((unsigned char*)p.getDataPointer()+1);
-		login = string(p.getDataPointer()+5,20);
-		password = string(p.getDataPointer()+25,20);
+		login = string(p.getDataPointer()+5);
+		password = string(p.getDataPointer()+25);
 	}
 
 	LoginPacket(string login, string password):MyPacket(){
-		*data = 0xC1;
-		this->writeInt((unsigned char *)(data+1),40);
-		memcpy(data+5,login.c_str(),login.size());
+		char * data_pointer = getDataPointer();
+		*data_pointer = 0xC1;
+		this->writeInt((unsigned char *)(data_pointer+1),40);
+		memcpy(data_pointer+5,login.c_str(),login.size());
 		/*
 		 * szyfrowanie hasla
 		 */
-		memcpy(data+5,password.c_str(),password.size());
+		memcpy(data_pointer+25,password.c_str(),password.size());
 		size+=45;
 	}
 };

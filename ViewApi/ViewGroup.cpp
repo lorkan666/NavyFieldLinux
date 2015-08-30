@@ -162,7 +162,8 @@ ViewGroup::~ViewGroup(void)
 {
 	for( std::list<View *>::iterator iter = childs.begin(); iter != childs.end(); ++iter )
 	{
-		delete *iter;
+		if(*iter != NULL)
+			delete *iter;
 	}
 }
 

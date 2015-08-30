@@ -35,10 +35,11 @@ void Portier::onPacketReceived(MyPacket p, Address address) {
 	unsigned char code = *p.getDataPointer();
 	switch(code){
 	case 0xC1:
-//		LoginPacket lp = LoginPacket(p);
-//		if(isPlayerExist(lp.login, lp.password)){
-//			virtual_connections.get(address)->keeping_alive = true;
-//		}
+		LoginPacket lp = LoginPacket(p);
+		if(isPlayerExist(lp.login, lp.password)){
+			cout<<"login:"<<lp.login<<" ("<<lp.login.length()<<")"<<endl;
+			virtual_connections.get(address)->keeping_alive = true;
+		}
 		break;
 	}
 	MyUDPConnection::onPacketReceived( p, address);
@@ -66,5 +67,5 @@ void Portier::onConnectFailed(ConnectionInfo& ci) {
 }
 
 bool Portier::isPlayerExist(string name, string hashed_password) {
-	return name.size() == 6;
+	return name.length() == 6;
 }

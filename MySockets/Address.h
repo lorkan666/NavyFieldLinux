@@ -35,4 +35,6 @@ private:
     unsigned short port;
 };
 
+extern std::ostream & operator <<( std::ostream & s, Address & p );
+
 #endif /* ADDRESS_H_ */

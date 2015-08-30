@@ -62,3 +62,10 @@ Address::Address(string adr, unsigned short port) {
 	address = ntohl(inet_addr( adr.c_str()));
 	this->port = port;
 }
+
+extern std::ostream & operator <<( std::ostream & s, Address & p )
+{
+	struct sockaddr_in my_addr;
+	my_addr.sin_addr.s_addr = htonl(p.GetAddress());
+    return s <<inet_ntoa(my_addr.sin_addr)<<":"<<p.GetPort();
+}

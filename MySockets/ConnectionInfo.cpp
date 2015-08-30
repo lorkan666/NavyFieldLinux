@@ -23,7 +23,7 @@ ConnectionInfo::ConnectionInfo() {
 }
 
 void ConnectionInfo::setState(State s){
-	cout<<"Address "<<this->address.GetAddress()<<" z "<<state<< " na "<<s<<endl;
+	cout<<"Address "<<this->address<<" z "<<state<< " na "<<s<<endl;
 	state = s;
 	switch(state){
 	case Disconnected:

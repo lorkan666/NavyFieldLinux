@@ -69,5 +69,6 @@ void GameScreen::render(SDL_Surface * display, int delay){
 
 GameScreen::~GameScreen(void)
 {
-	delete stage;
+	if(stage != NULL)
+		delete stage;
 }
