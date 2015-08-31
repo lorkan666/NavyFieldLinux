@@ -12,7 +12,7 @@ using namespace std;
 Portier::Portier():MyUDPConnection() {
 	readProperties("server.xml");
 	this->setTimeout(getDoubleProperty("timeout"));
-	this->keeping_alive = false;
+	this->keeping_alive = getBoolProperty("keep_alive");
 	this->setMode(ConnectionInfo::Server);
 
 	std::stringstream ss;

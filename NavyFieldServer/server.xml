@@ -5,7 +5,7 @@
 		<MAX_CONNECTION>1000</MAX_CONNECTION>
 	</int>
 	<bool>
-		<keep_alive>true</keep_alive>
+		<keep_alive>false</keep_alive>
 	</bool>
 	<string>
 		<server_ip>127.0.0.1</server_ip>

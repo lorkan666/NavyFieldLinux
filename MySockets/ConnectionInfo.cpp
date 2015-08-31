@@ -17,6 +17,7 @@ ConnectionInfo::ConnectionInfo() {
 	mode = None;
 	state = Disconnected;
 	timeoutAccumulator = 0.0;
+	last_send_time = 0;
 	keeping_alive=false;
 	cl=NULL;
 	acks_sys = AckSystem(0xFFFFFFFF);

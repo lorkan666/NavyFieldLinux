@@ -71,6 +71,7 @@ void MyUDPConnection::connect(const Address& address) {
 		return;
 	if(virtual_connections.contains(address))
 		return;
+	MyPacket p = MyPacket();
 	ConnectionInfo  new_connection =  ConnectionInfo();
 	if(cl != NULL)
 		new_connection.setConnectionListener(cl);
@@ -81,6 +82,7 @@ void MyUDPConnection::connect(const Address& address) {
 	new_connection.acks_sys.setPacketListener(this);
 	new_connection.setState(ConnectionInfo::Connecting);
 	virtual_connections.push_back(new_connection);
+	sendPacket(p,new_connection.address);
 }
 
 bool MyUDPConnection::isConnected(Address& address) {
@@ -113,6 +115,7 @@ void MyUDPConnection::update(float delta) {
 	ConnectionInfo *ci;
 
 	for ( itor=virtual_connections.begin();itor != virtual_connections.end();itor++ ){
+
 		ci=&(*itor);
 		ci->timeoutAccumulator += delta;
 		if((ci->state == ConnectionInfo::Connected)  || (ci->state == ConnectionInfo::Connecting)){
@@ -127,8 +130,7 @@ void MyUDPConnection::update(float delta) {
 
 			if(ci->keeping_alive){
 				time_t now = time(NULL);
-
-				if((now - ci->last_send_time) >= (int)(timeout*keeping_alive_ratio))
+				if((ci->last_send_time == 0) ||(now - ci->last_send_time) >= (int)(timeout*keeping_alive_ratio))
 					if(sendPacket(p,ci->address)){
 						ci->last_send_time = now;
 					}
@@ -153,7 +155,6 @@ bool MyUDPConnection::sendPacket(MyPacket &p, Address & address) {
 		onPacketNoneSent(p,address);
 		return false;
 	}
-	cout<<"Wyslano: "<<p<<endl;
 	ci->acks_sys.packetSent(p);
 
 	onPacketSent(p,address);
@@ -171,14 +172,13 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 		return 0;
 
 	p.setSize(bytes_read);
-	cout<<"Odebrano: "<<p<<endl;
 	if(!virtual_connections.contains(sender)){
 		if(info.mode != ConnectionInfo::Client){
 			ConnectionInfo  new_connection =  ConnectionInfo();
 			new_connection.keeping_alive = this->keeping_alive;
 			new_connection.address = sender;
 			new_connection.mode = ConnectionInfo::Client;
-			new_connection.last_send_time = time(NULL);
+			//new_connection.last_send_time = time(NULL);
 			new_connection.timeoutAccumulator = 0;
 			new_connection.acks_sys.setPacketListener(this);
 			new_connection.acks_sys.packetReceived(p);
@@ -197,8 +197,6 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 		if(ci->state == ConnectionInfo::Connecting )
 			ci->setState(ConnectionInfo::Connected);
 		ci->timeoutAccumulator = 0.0;
-		ci->keeping_alive = this->keeping_alive;
-		ci->acks_sys.setPacketListener(this);
 		ci->acks_sys.packetReceived(p);
 		ci->acks_sys.processAck(p);
 
@@ -294,6 +292,7 @@ void MyUDPConnection::removeDisconnected() {
 void MyUDPConnection::onPacketSent(MyPacket p, Address address) {
 	if(pl != NULL)
 		pl->onPacketSent(p,address);
+	cout<<"Wysłano: "<<p<<endl;
 }
 
 void MyUDPConnection::onPacketNoneSent(MyPacket p, Address address) {
@@ -305,6 +304,7 @@ void MyUDPConnection::onPacketNoneSent(MyPacket p, Address address) {
 void MyUDPConnection::onPacketReceived(MyPacket p, Address address) {
 	if(pl != NULL)
 		pl->onPacketReceived(p,address);
+	cout<<"Odebrano: "<<p<<endl;
 }
 
 void MyUDPConnection::onPacketDelivered(MyPacket p, Address address) {

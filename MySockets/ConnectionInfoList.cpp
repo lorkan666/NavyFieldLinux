@@ -19,8 +19,7 @@ bool ConnectionInfoList::contains(Address adr) {
 }
 
 ConnectionInfo* ConnectionInfoList::get(Address adr) {
-	list<ConnectionInfo>::iterator itor;
-	for ( itor = begin(); itor != end(); ++itor )
+	for ( iterator itor = begin(); itor != end(); ++itor )
 		if ( itor->address == adr )
 			return &(*itor);
 	return NULL;
