@@ -13,6 +13,7 @@ class ConnectionInfo;
 class ConnectionListener {
 public:
 	virtual void onConnect(ConnectionInfo &ci)=0;
+	virtual void onConnecting(ConnectionInfo &ci)=0;
 	virtual void onDisconnect(ConnectionInfo &ci)=0;
 	virtual void onConnectFailed(ConnectionInfo &ci)=0;
 };

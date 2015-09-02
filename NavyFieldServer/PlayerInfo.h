@@ -8,13 +8,16 @@
 #ifndef PLAYERINFO_H_
 #define PLAYERINFO_H_
 #include "Address.h"
+#include "ConnectionInfo.h"
 
 class PlayerInfo {
 public:
-	PlayerInfo(const char* login, Address address);
-	char login[20];
-	char ship[20];
+	PlayerInfo();
+	PlayerInfo(string login, Address adr);
+	string login;
+	int ship;
 	Address address;
+	void selectShip(int ship);
 };
 
 #endif /* PLAYERINFO_H_ */

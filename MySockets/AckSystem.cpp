@@ -202,3 +202,7 @@ void AckSystem::updateStats() {
 void AckSystem::setPacketListener(PacketListener* pl) {
 	this->pl=pl;
 }
+
+void AckSystem::setRTTmaximum(float rtt_max) {
+	this->rtt_maximum = rtt_max;
+}

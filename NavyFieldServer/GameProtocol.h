@@ -24,7 +24,7 @@ public:
 		return *this;
 	}
 
-	GamePacket & addChar(unsigned char value){
+	GamePacket & addChar(char value){
 		if(getHeaderSize()+pos+1 >= getMaxSize())
 			return *this;
 		data[pos]=value;
@@ -32,8 +32,16 @@ public:
 		size+=1;
 		return *this;
 	}
+	GamePacket & addUChar(unsigned char value){
+		if(getHeaderSize()+pos+1 >= getMaxSize())
+			return *this;
+		((unsigned char*)data)[pos]=value;
+		pos+=1;
+		size+=1;
+		return *this;
+	}
 	GamePacket & addString(string value){
-		if(getHeaderSize()+pos+value.size() >= getMaxSize())
+		if(getHeaderSize()+pos+((int)value.length()) >= getMaxSize())
 			return *this;
 		memcpy(data+pos,value.c_str(),value.size());
 		size+=value.size();
@@ -43,30 +51,21 @@ private:
 	int pos;
 };
 
-// C1 | len | login | password
-// 1  |  4  |   20  |  20
+// C1 | login | password
+// 1  |   20  |  20
 
 class LoginPacket: public MyPacket{
 public:
-	string login;
-	string password;
-	unsigned int length;
-	LoginPacket(MyPacket & p){
-		length = MyPacket::readInt((unsigned char*)p.getDataPointer()+1);
-		login = string(p.getDataPointer()+5);
-		password = string(p.getDataPointer()+25);
-	}
 
 	LoginPacket(string login, string password):MyPacket(){
-		char * data_pointer = getDataPointer();
+		unsigned char * data_pointer = (unsigned char * )getDataPointer();
 		*data_pointer = 0xC1;
-		this->writeInt((unsigned char *)(data_pointer+1),40);
-		memcpy(data_pointer+5,login.c_str(),login.size());
+		memcpy(data_pointer+1,login.c_str(),login.size());
 		/*
 		 * szyfrowanie hasla
 		 */
-		memcpy(data_pointer+25,password.c_str(),password.size());
-		size+=45;
+		memcpy(data_pointer+21,password.c_str(),password.size());
+		size+=41;
 	}
 };
 

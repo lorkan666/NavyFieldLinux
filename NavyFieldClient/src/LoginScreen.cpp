@@ -17,6 +17,7 @@ SimpleButton * loginButton;
 ImageView * bgd;
 LinearLayout * loginBox;
 int reconnects;
+MyGame *mg;
 
 LoginScreen::LoginScreen(void)
 {
@@ -65,9 +66,9 @@ void LoginScreen::enter(){
 	passEdit->setFillParent(true,false);
 	passEdit->setText("polifons");
 
-	MyGame *mg = (MyGame*)game;
+	mg = (MyGame*)game;
 	mg->connection->setConnectionListener(this);
-
+	mg->connection->setPacketListener(this);
 	loginButton->setOnMouseClickCallback(
 			[mg,&logEdit,&passEdit](int x, int y, View * v){
 				MyPacket p = LoginPacket(logEdit->getText(),passEdit->getText());
@@ -82,7 +83,7 @@ void LoginScreen::render(SDL_Surface * display, int delay)
 }
 
 void LoginScreen::onConnect(ConnectionInfo& ci) {
-	cout<<"Connected"<<endl;
+	//this->game->changeScreen("port");
 }
 
 void LoginScreen::onDisconnect(ConnectionInfo& ci) {
@@ -92,6 +93,33 @@ void LoginScreen::onConnectFailed(ConnectionInfo& ci) {
 }
 
 void LoginScreen::leave() {
+}
+
+void LoginScreen::onConnecting(ConnectionInfo& ci) {
+}
+
+void LoginScreen::onPacketSent(MyPacket p, Address address) {
+}
+
+void LoginScreen::onPacketNoneSent(MyPacket p, Address address) {
+}
+
+void LoginScreen::onPacketReceived(MyPacket p, Address address) {
+	unsigned char * code = (unsigned char * )p.getDataPointer();
+	 int * test = ( int * )p.getDataPointer();
+	cout<<*test<<endl;
+	switch(*code){
+	case 0xC1:{
+			this->game->changeScreen("port");
+		}
+		break;
+	}
+}
+
+void LoginScreen::onPacketDelivered(MyPacket p, Address address) {
+}
+
+void LoginScreen::onPacketLost(MyPacket p, Address address) {
 }
 
 LoginScreen::~LoginScreen(void)

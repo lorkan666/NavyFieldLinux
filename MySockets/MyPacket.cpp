@@ -58,7 +58,7 @@ void MyPacket::writeInt( unsigned int * data_int, unsigned int value )
 	data_char[3] = (unsigned char) ( value & 0xFF );
 }
 
-unsigned int MyPacket::readInt( unsigned char * data_char)
+unsigned int MyPacket::readInt( char * data_char)
 {
 	return ( ( (unsigned int)data_char[0] << 24 ) | ( (unsigned int)data_char[1] << 16 ) |
 			  ( (unsigned int)data_char[2] << 8 )  | ( (unsigned int)data_char[3] ) );
@@ -148,6 +148,10 @@ extern std::ostream & operator <<( std::ostream & s, MyPacket & p )
     		 <<"|"<<p.getSequence()<<"|"
 			 <<"|"<<p.getAck()<<"|"<<std::bitset<32>(p.getAcksRecent())<<"|"
 			 <<"|"<<p.getSize()<<"|";
+//	return s <<"|"<<p.getPid()<<"|"
+//	    		 <<"|"<<p.getSequence()<<"|"
+//				 <<"|"<<p.getAck()<<"|"<<std::bitset<32>(*((int*)p.getDataPointer()))<<"|"
+//				 <<"|"<<p.getSize()<<"|";
 }
 
 

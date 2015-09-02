@@ -184,10 +184,9 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 			new_connection.acks_sys.packetReceived(p);
 			new_connection.acks_sys.processAck(p);
 			if(cl != NULL){
-				cout<<"Connection listener not null\n";
 				new_connection.setConnectionListener(cl);
 			}
-			new_connection.setState(ConnectionInfo::Connected);
+			new_connection.setState(ConnectionInfo::Connecting);
 			virtual_connections.push_back(new_connection);
 		}
 	}else{
@@ -290,27 +289,31 @@ void MyUDPConnection::removeDisconnected() {
 }
 
 void MyUDPConnection::onPacketSent(MyPacket p, Address address) {
+	cout<<"Wysłano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketSent(p,address);
-	cout<<"Wysłano: "<<p<<endl;
+
 }
 
 void MyUDPConnection::onPacketNoneSent(MyPacket p, Address address) {
+	cout<<"Nie wysłano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketNoneSent(p,address);
-	cout<<"Nie wysłano: "<<p<<endl;
+
 }
 
 void MyUDPConnection::onPacketReceived(MyPacket p, Address address) {
+	cout<<"Odebrano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketReceived(p,address);
-	cout<<"Odebrano: "<<p<<endl;
+
 }
 
 void MyUDPConnection::onPacketDelivered(MyPacket p, Address address) {
-	if(pl != NULL)
-		pl->onPacketDelivered(p,address); //dopracowac address nie ten
 	cout<<"Dostarczony: "<<p<<endl;
+	if(pl != NULL)
+		pl->onPacketDelivered(p,address);
+
 }
 
 void MyUDPConnection::setPacketListener(PacketListener* pl) {
@@ -322,8 +325,15 @@ void MyUDPConnection::setConnectionListener(ConnectionListener * cl) {
 }
 
 void MyUDPConnection::onPacketLost(MyPacket p, Address address) {
-	if(pl != NULL)
-		pl->onPacketLost(p,address); //dopracowac address nie ten
 	cout<<"Zgubiony: "<<p<<endl;
+	if(pl != NULL)
+		pl->onPacketLost(p,address);
+
 }
 
+void MyUDPConnection::setRttMax(float rtt) {
+	list<ConnectionInfo>::iterator itor;
+	for ( itor=virtual_connections.begin();itor != virtual_connections.end(); ){
+		itor->acks_sys.setRTTmaximum(rtt);
+	}
+}

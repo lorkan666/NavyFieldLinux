@@ -11,6 +11,7 @@
 #include <PropertiesConfigReader.h>
 #include <MyUDPConnection.h>
 #include "ConnectionInfoList.h"
+#include "PlayerInfoList.h"
 #include "ConnectionListener.h"
 #include "GameProtocol.h"
 
@@ -23,11 +24,13 @@ public:
 	virtual void onPacketDelivered(MyPacket p, Address address);
 	virtual void onPacketLost(MyPacket p, Address address);
 	virtual void onConnect(ConnectionInfo &ci);
+	virtual void onConnecting(ConnectionInfo &ci);
 	virtual void onDisconnect(ConnectionInfo &ci);
 	virtual void onConnectFailed(ConnectionInfo &ci);
 	virtual ~Portier();
 private:
-	bool isPlayerExist(string name, string hashed_password);
+	bool validatePlayer(string name, string hashed_password);
+	PlayerInfoList logged_players;
 };
 
 #endif /* PORTIER_H_ */

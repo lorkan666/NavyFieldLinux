@@ -21,6 +21,7 @@ public:
 	void packetSent(MyPacket p );
 	void packetReceived(MyPacket p );
 	void setPacketListener(PacketListener * pl);
+	void setRTTmaximum(float rtt_max);
 	unsigned int generateAckBits();
 	void processAck(MyPacket p);
 	void update( float deltaTime );

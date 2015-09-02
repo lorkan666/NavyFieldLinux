@@ -42,6 +42,7 @@ public:
 	void setPacketListener(PacketListener * pl);
 	void setConnectionListener(ConnectionListener * cl);
 	void setMode(ConnectionInfo::Mode m);
+	void setRttMax(float rtt);
 	static void *connectionThreadFunction(void *params);
 	virtual bool sendPacket(MyPacket &p, Address & address);
 	virtual int receivePacket(MyPacket &p);

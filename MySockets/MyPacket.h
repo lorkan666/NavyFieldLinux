@@ -35,7 +35,7 @@ public:
 	bool isDelivered();
 	static void writeInt( unsigned char * data, unsigned int value );
 	static void writeInt( unsigned int * data, unsigned int value );
-	static unsigned int readInt( unsigned char * data);
+	static unsigned int readInt( char * data);
 	static unsigned int readInt( unsigned int * data);
 	unsigned int getAck() ;
 	void setAck(unsigned int ack);

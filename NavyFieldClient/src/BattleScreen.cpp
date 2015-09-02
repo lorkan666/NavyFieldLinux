@@ -25,8 +25,7 @@ void BattleScreen::enter(){
 	//sea->setBackgroundColor(110,110,200,1);
 	sea->setFillParent(true,true);	
 
-	Ship * iowa = new Ship(game->getStringProperty("ships_directory")+"iowa/");
-	//Ship * iowa2 = new Ship(game->fixPath(game->getStringProperty("ships_directory").append("iowa<separator>")));
+	Ship * iowa = new Ship(game->getStringProperty("ships_directory")+"1/");
 	iowa->setName("iowa");
 	//iowa->setBackgroundColor(110,110,100,1);
 	sea->addView(iowa);

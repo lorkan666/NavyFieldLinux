@@ -16,6 +16,8 @@ class PlayerInfoList: public std::list<PlayerInfo> {
 public:
 	PlayerInfoList();
 	bool contains(Address adr);
+	PlayerInfo * get(Address adr);
+	void removeByAddress(Address adr);
 };
 
 #endif /* PLAYERINFOLIST_H_ */

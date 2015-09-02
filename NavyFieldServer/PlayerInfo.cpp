@@ -8,7 +8,17 @@
 #include "PlayerInfo.h"
 #include <cstring>
 
-PlayerInfo::PlayerInfo(const char* login, Address address) {
-	memcpy(this->login, login, 20);
-	this->address=address;
+PlayerInfo::PlayerInfo(string login, Address adr) {
+	this->login = login;
+	address = adr;
+	ship=0;
+}
+
+PlayerInfo::PlayerInfo() {
+	login="";
+	ship=0;
+}
+
+void PlayerInfo::selectShip(int ship) {
+	this->ship = ship;
 }
