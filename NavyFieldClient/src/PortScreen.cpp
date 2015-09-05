@@ -8,14 +8,18 @@
 #include <PortScreen.h>
 #include "LinearLayout.h"
 #include "SimpleButton.h"
+#include "MyGame.h"
+#include "GameProtocol.h"
 
 LinearLayout * vbox, * mainbox;
 LinearLayout * top_menu, * right_menu, * left_menu;
 
 PortScreen::PortScreen(void) {
+	selected_ship=0;
 }
 
 PortScreen::PortScreen(string name):GameScreen(name) {
+	selected_ship=0;
 }
 
 void PortScreen::render(SDL_Surface* display, int delay) {
@@ -64,7 +68,6 @@ void PortScreen::enter() {
 	mainbox->setWeight(8);
 
 	SimpleButton * iowaButton = new SimpleButton("Iowa");
-	//connectButton->setOnMouseClickCallback([](int x, int y, View * v){});
 	SimpleButton * mushButton = new SimpleButton("Musashi");
 	mainbox->addView(iowaButton);
 	mainbox->addView(mushButton);
@@ -73,7 +76,79 @@ void PortScreen::enter() {
 	vbox->addView(mainbox);
 
 	stage->addView(vbox);
+
+	MyGame *mg = (MyGame*)game;
+	mg->connection->setConnectionListener(this);
+	mg->connection->setPacketListener(this);
+	iowaButton->setOnMouseClickCallback(
+			[mg](int x, int y, View * v){
+				MyPacket p = GamePacket().addUChar(0xC2).addUInt(1);
+				p.setRetransmiting(3);
+				mg->connection->connect(mg->server_address);
+				mg->connection->sendTask(p,mg->server_address);
+			});
+	mushButton->setOnMouseClickCallback(
+				[mg](int x, int y, View * v){
+					MyPacket p = GamePacket().addUChar(0xC2).addUInt(2);
+					p.setRetransmiting(3);
+					mg->connection->connect(mg->server_address);
+					mg->connection->sendTask(p,mg->server_address);
+				});
+	battleButton->setOnMouseClickCallback(
+				[mg](int x, int y, View * v){
+					MyPacket p = GamePacket().addUChar(0xC3);
+					p.setRetransmiting(3);
+					mg->connection->connect(mg->server_address);
+					mg->connection->sendTask(p,mg->server_address);
+				});
+	logoutButton->setOnMouseClickCallback(
+				[mg](int x, int y, View * v){
+					MyPacket p = GamePacket().addUChar(0xC4);
+					p.setRetransmiting(3);
+					mg->connection->connect(mg->server_address);
+					mg->connection->sendTask(p,mg->server_address);
+				});
 }
 
 void PortScreen::leave() {
+}
+
+void PortScreen::onConnect(ConnectionInfo& ci) {
+}
+
+void PortScreen::onConnecting(ConnectionInfo& ci) {
+}
+
+void PortScreen::onDisconnect(ConnectionInfo& ci) {
+	MyGame *mg = (MyGame*)game;
+	mg->changeScreen("login");
+}
+
+void PortScreen::onConnectFailed(ConnectionInfo& ci) {
+}
+
+void PortScreen::onPacketSent(MyPacket p, Address address) {
+}
+
+void PortScreen::onPacketNoneSent(MyPacket p, Address address) {
+}
+
+void PortScreen::onPacketReceived(MyPacket p, Address address) {
+	unsigned char * code = (unsigned char * )p.getDataPointer();
+	switch(*code){
+	case 0xC3:{
+			if(*(code+1) == 1)
+				this->game->changeScreen("battle");
+			else{
+				//nie wybrano okretu
+			}
+			break;
+		}
+	}
+}
+
+void PortScreen::onPacketDelivered(MyPacket p, Address address) {
+}
+
+void PortScreen::onPacketLost(MyPacket p, Address address) {
 }

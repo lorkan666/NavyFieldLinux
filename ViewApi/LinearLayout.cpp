@@ -13,7 +13,7 @@ LinearLayout::LinearLayout()
 }
 
 void LinearLayout::updateLayout(){
-#ifndef NDEBUG
+#ifdef _UPDATE
 	        Uint32 startTicks = SDL_GetTicks();
 #endif
 			//cout<<"LinearLayout::updateLayout"<<endl;
@@ -104,7 +104,7 @@ void LinearLayout::updateLayout(){
 				prev=i;
 			}
 			//__super::updateLayout();
-#ifndef NDEBUG
+#ifdef _UPDATE
 			cout<<__FUNCTION__<<"-"<<SDL_GetTicks() - startTicks<<endl;
 #endif
 }

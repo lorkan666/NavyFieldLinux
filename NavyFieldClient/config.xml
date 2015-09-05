@@ -21,6 +21,6 @@
 		<login_img>gfx#separator#loginscreen.jpg</login_img>
 	</string>
 	<double>
-		<timeout>10.0</timeout>
+		<timeout>5.0</timeout>
 	</double>
 </config>

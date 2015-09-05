@@ -12,6 +12,6 @@
 		<protocol_id>FFAAAAFF</protocol_id>
 	</string>
 	<double>
-		<timeout>10.0</timeout>
+		<timeout>5.0</timeout>
 	</double>
 </config>

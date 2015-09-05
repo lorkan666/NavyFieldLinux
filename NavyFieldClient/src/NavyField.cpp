@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		MyGame * g = new MyGame();
-		g->connection->setRttMax(2.0f);
+		g->connection->setRttMax(1.0f);
 		int portArg;
 		if(argc>1){
 			istringstream iss(argv[1]);

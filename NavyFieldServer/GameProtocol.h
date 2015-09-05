@@ -18,7 +18,7 @@ public:
 	GamePacket & addUInt(unsigned int value){
 		if(getHeaderSize()+pos+4 >= getMaxSize())
 			return *this;
-		this->writeInt((unsigned char *)data+pos, value);
+		this->writeInt((unsigned char *)getDataPointer()+pos, value);
 		pos+=4;
 		size+=4;
 		return *this;
@@ -27,7 +27,7 @@ public:
 	GamePacket & addChar(char value){
 		if(getHeaderSize()+pos+1 >= getMaxSize())
 			return *this;
-		data[pos]=value;
+		getDataPointer()[pos]=value;
 		pos+=1;
 		size+=1;
 		return *this;
@@ -35,7 +35,7 @@ public:
 	GamePacket & addUChar(unsigned char value){
 		if(getHeaderSize()+pos+1 >= getMaxSize())
 			return *this;
-		((unsigned char*)data)[pos]=value;
+		((unsigned char*)getDataPointer())[pos]=value;
 		pos+=1;
 		size+=1;
 		return *this;
@@ -43,7 +43,7 @@ public:
 	GamePacket & addString(string value){
 		if(getHeaderSize()+pos+((int)value.length()) >= getMaxSize())
 			return *this;
-		memcpy(data+pos,value.c_str(),value.size());
+		memcpy(getDataPointer()+pos,value.c_str(),value.size());
 		size+=value.size();
 		return *this;
 	}

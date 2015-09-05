@@ -15,6 +15,7 @@ MyPacket::MyPacket() {
 	time=0;
 	size = getHeaderSize();
 	header = (PacketHeader*)data;
+	this->retransmiting = 0;
 }
 
 MyPacket::MyPacket(const char* msg, unsigned int size):MyPacket() {
@@ -28,6 +29,7 @@ MyPacket::MyPacket(const char* msg, unsigned int size):MyPacket() {
 MyPacket::MyPacket(const MyPacket& coped):MyPacket() {
 	this->delivered = coped.delivered;
 	this->size = coped.size;
+	this->retransmiting = coped.retransmiting;
 	memcpy(this->data, coped.data, coped.size);
 }
 
@@ -154,4 +156,18 @@ extern std::ostream & operator <<( std::ostream & s, MyPacket & p )
 //				 <<"|"<<p.getSize()<<"|";
 }
 
+MyPacket& MyPacket::operator =(const MyPacket& p) {
+	this->delivered = p.delivered;
+	this->size = p.size;
+	this->retransmiting=p.retransmiting;
+	memcpy(this->data, p.data, p.size);
+	return *this;
+}
 
+void MyPacket::setRetransmiting(int r) {
+	retransmiting = r;
+}
+
+int MyPacket::getRetransmiting() {
+	return retransmiting;
+}

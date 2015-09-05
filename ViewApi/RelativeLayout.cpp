@@ -6,14 +6,14 @@ RelativeLayout::RelativeLayout(void)
 }
 
 void RelativeLayout::updateLayout(){
-#ifndef NDEBUG
+#ifdef _UPDATE
 	        Uint32 startTicks = SDL_GetTicks();
 #endif
 			for( std::list<View *>::iterator iter = childs.begin(); iter != childs.end(); ++iter )
 			{
 				(*iter)->setOffset(getX(),getY());
 			}
-#ifndef NDEBUG
+#ifdef _UPDATE
 			cout<<__FUNCTION__<<"-"<<SDL_GetTicks() - startTicks<<endl;
 #endif
 }

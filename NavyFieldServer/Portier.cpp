@@ -20,7 +20,7 @@ Portier::Portier():MyUDPConnection() {
 	ss << std::hex << getStringProperty("protocol_id");
 	ss >> this->protocol_id;
 	cout<<getStringProperty("protocol_id")<<endl;
-	this->setRttMax(2.0f);
+	this->setRttMax(1.0f);
 	this->start(Address(0,getIntProperty("server_port")));
 }
 
@@ -42,32 +42,48 @@ void Portier::onPacketReceived(MyPacket p, Address address) {
 		string login = string(p.getDataPointer()+1);
 		string password = string(p.getDataPointer()+21);
 		if(validatePlayer(login, password)){
-			GamePacket pp = GamePacket().addUChar(0xC1);
-			sendPacket(GamePacket().addChar(0xC1),address);
+			MyPacket pp(GamePacket().addUChar(0xC1).addUChar(0x01));
+			pp.setRetransmiting(3);
+			sendTask(pp,address);
 			ConnectionInfo * ci = virtual_connections.get(address);
 			ci->keeping_alive = true;
 			PlayerInfo pi = PlayerInfo(login, ci->address);
 			logged_players.push_back(pi);
 			cout<<"Player "<<login<<" logged in"<<endl;
+		}else{
+			MyPacket pp(GamePacket().addUChar(0xC1).addUChar(0x00));
+			pp.setRetransmiting(3);
+			sendPacket(pp,address);
 		}
 		break;
 	}
 	case 0xC2:{
 		if(!logged_players.contains(address))
 			return;
-		int s = p.readInt((char * )code+1);
-		logged_players.get(address)->selectShip(s);
-		sendPacket(GamePacket().addUChar(0xC2),address);
-		cout<<"Player select ship"<<s<<endl;
+		PlayerInfo * pi = logged_players.get(address);
+		pi->ship = p.readInt(p.getDataPointer()+1);
+		MyPacket pp(GamePacket().addUChar(0xC2).addUChar(0x01));
+		pp.setRetransmiting(3);
+		sendTask(pp,address);
 		break;
 	}
 	case 0xC3:{
 		if(!logged_players.contains(address))
 			return;
 		PlayerInfo * pi = logged_players.get(address);
-		if(pi->ship == 0){
+		if(pi->ship != 0){
+			MyPacket pp(GamePacket().addUChar(0xC3).addUChar(0x01));
+			pp.setRetransmiting(3);
+			sendTask(pp,address);
+		}else{
+			MyPacket pp(GamePacket().addUChar(0xC3).addUChar(0x00));
+			pp.setRetransmiting(3);
+			sendTask(pp,address);
 		}
 		break;
+	}
+	case 0xC4:{
+		this->disconnect(address);
 	}
 	}
 }

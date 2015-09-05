@@ -50,15 +50,19 @@ public:
 	void setSize(int size);
 	int getMaxSize();
 	int getHeaderSize();
+	void setRetransmiting(int r);
+	int getRetransmiting();
 	float time;
 	char * getDataPointer();
 	bool delivered;
 	bool operator ==( const MyPacket & v );
+	MyPacket& operator=(const MyPacket& p) ;
 
 protected:
 	PacketHeader * header;
 	char * data;
 	int size;
+	int retransmiting;
 };
 
 

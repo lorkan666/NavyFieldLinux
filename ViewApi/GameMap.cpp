@@ -145,7 +145,7 @@ void GameMap::updateFrameSurface(){
 }
 
 void GameMap::updateLayout(){
-#ifndef NDEBUG
+#ifdef _UPDATE
 	        Uint32 startTicks = SDL_GetTicks();
 #endif
 	frame_original = frame;
@@ -174,7 +174,7 @@ void GameMap::updateLayout(){
 		surface=tmp;
 	}
 
-#ifndef NDEBUG
+#ifdef _UPDATE
 			cout<<__FUNCTION__<<"-"<<SDL_GetTicks() - startTicks<<endl;
 #endif
 }

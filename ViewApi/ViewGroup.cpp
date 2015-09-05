@@ -70,11 +70,11 @@ View * ViewGroup::findViewByName(string name){
 }
 
 void ViewGroup::updateLayout(){
-#ifndef NDEBUG
+#ifdef _UPDATE
 	        Uint32 startTicks = SDL_GetTicks();
 #endif
 
-#ifndef NDEBUG
+#ifdef _UPDATE
 			cout<<__FUNCTION__<<"-"<<SDL_GetTicks() - startTicks<<endl;
 #endif
 }

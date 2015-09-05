@@ -13,8 +13,10 @@
 #include "ConnectionInfoList.h"
 #include "ConnectionListener.h"
 #include "PacketListener.h"
+#include "SendTask.h"
 #include <thread>
 #include <map>
+#include <list>
 
 
 using namespace std;
@@ -45,6 +47,7 @@ public:
 	void setRttMax(float rtt);
 	static void *connectionThreadFunction(void *params);
 	virtual bool sendPacket(MyPacket &p, Address & address);
+	bool sendTask(MyPacket &p, Address & address);
 	virtual int receivePacket(MyPacket &p);
 	virtual void update( float delta);
 	void removeDisconnected();
@@ -58,6 +61,7 @@ protected:
 	ConnectionInfoList virtual_connections;
 	unsigned int protocol_id;
 	bool keeping_alive;
+	list<SendTask> toSend;
 
 private:
 	PacketListener * pl;

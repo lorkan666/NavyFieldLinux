@@ -1,0 +1,22 @@
+<config>
+	<cannon1>
+		<posY>0</posY>
+		<posX>-55</posX>
+		<orientation>0</orientation>
+		<shells_count>3</shells_count>
+	</cannon1>
+	
+	<cannon2>
+		<posY>0</posY>
+		<posX>51</posX>
+		<orientation>1</orientation>
+		<shells_count>3</shells_count>
+	</cannon2>
+	
+	<cannon3>
+		<posY>0</posY>
+		<posX>25</posX>
+		<orientation>1</orientation>
+		<shells_count>3</shells_count>
+	</cannon3>
+</config>

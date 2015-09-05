@@ -133,7 +133,7 @@ void Ship::setPosition(int xx, int yy){
 }
 
 void Ship::updateLayout(){
-#ifndef NDEBUG
+#ifdef _UPDATE
 	        Uint32 startTicks = SDL_GetTicks();
 #endif
 	RelativeLayout::updateLayout();
@@ -142,7 +142,7 @@ void Ship::updateLayout(){
 	fixCannonsRotation();
 	fixCannonsPosition();
 	
-#ifndef NDEBUG
+#ifdef _UPDATE
 			cout<<__FUNCTION__<<"-"<<SDL_GetTicks() - startTicks<<endl;
 #endif
 	

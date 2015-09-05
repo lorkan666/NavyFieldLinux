@@ -10,6 +10,7 @@
 
 AckSystem::AckSystem() {
 	max_sequence = 0xFFFFFFFF;
+	this->rtt_maximum = 1.0f;
 	pl = NULL;
 	reset();
 }
@@ -77,7 +78,7 @@ void AckSystem::processAck(MyPacket p) {
 			acked_packets++;
 			itor->delivered = true;
 			if(pl != NULL){
-				pl->onPacketDelivered(*itor,Address());
+				pl->onPacketDelivered(*itor,address);
 			}
 			itor = pendingAckQueue.erase( itor );
 		}
@@ -171,11 +172,12 @@ void AckSystem::updateQueues() {
 
 	while ( pendingAckQueue.size() && pendingAckQueue.front().time > rtt_maximum + epsilon )
 	{
-		if(pl != NULL){
-			pl->onPacketLost(*(pendingAckQueue.begin()),Address());
-		}
+		MyPacket p = *(pendingAckQueue.begin());
 		pendingAckQueue.pop_front();
 		lost_packets++;
+		if(pl != NULL){
+			pl->onPacketLost(p,address);
+		}
 	}
 }
 

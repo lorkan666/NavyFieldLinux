@@ -13,14 +13,15 @@
 #include <thread>
 #include <ctime>
 #include <errno.h>
+#include "SendTask.h"
 
 //#pragma comment (lib, "pthread.lib")
 using namespace std;
 
-#define keeping_alive_ratio 0.3  //send interval = timeout * keeping_alive_ratio
+#define keeping_alive_ratio 0.5  //send interval = timeout * keeping_alive_ratio
 
 MyUDPConnection::MyUDPConnection() {
-	timeout = 10.0f;
+	timeout = 5.0f;
 	protocol_id = 0xFFFFFFFF;
 	info.mode = ConnectionInfo::None;
 	info.last_send_time = time(NULL);
@@ -76,13 +77,15 @@ void MyUDPConnection::connect(const Address& address) {
 	if(cl != NULL)
 		new_connection.setConnectionListener(cl);
 	new_connection.address = address;
+	new_connection.acks_sys.address = address;
 	new_connection.keeping_alive = this->keeping_alive;
 	new_connection.mode = ConnectionInfo::Server;
 	new_connection.last_send_time = 0;
 	new_connection.acks_sys.setPacketListener(this);
 	new_connection.setState(ConnectionInfo::Connecting);
 	virtual_connections.push_back(new_connection);
-	sendPacket(p,new_connection.address);
+	p.setRetransmiting(3);
+	sendTask(p,new_connection.address);
 }
 
 bool MyUDPConnection::isConnected(Address& address) {
@@ -96,9 +99,7 @@ void MyUDPConnection::disconnect(Address address) {
 		return;
 	ConnectionInfo *ci = virtual_connections.get(address);
 	ci->setState(ConnectionInfo::Disconnected);
-	cout<<"virtual_connections: "<<virtual_connections.size()<<endl;
 	virtual_connections.remove(address);
-	cout<<"virtual_connections: "<<virtual_connections.size()<<endl;
 }
 
 
@@ -130,8 +131,8 @@ void MyUDPConnection::update(float delta) {
 
 			if(ci->keeping_alive){
 				time_t now = time(NULL);
-				if((ci->last_send_time == 0) ||(now - ci->last_send_time) >= (int)(timeout*keeping_alive_ratio))
-					if(sendPacket(p,ci->address)){
+				if((ci->last_send_time == 0) ||(now - ci->last_send_time) >= (int)(ci->acks_sys.rtt_maximum*keeping_alive_ratio))
+					if(sendTask(p,ci->address)){
 						ci->last_send_time = now;
 					}
 			}
@@ -146,7 +147,9 @@ void MyUDPConnection::setState(ConnectionInfo::State s) {
 
 bool MyUDPConnection::sendPacket(MyPacket &p, Address & address) {
 	ConnectionInfo *ci = virtual_connections.get(address);
-
+	if(ci == NULL){
+		return false;
+	}
 	p.setPid(this->protocol_id);
 	p.setSequence(ci->acks_sys.getLocalSequence());
 	p.setAck(ci->acks_sys.getRemoteSequence());
@@ -159,6 +162,11 @@ bool MyUDPConnection::sendPacket(MyPacket &p, Address & address) {
 
 	onPacketSent(p,address);
 
+	return true;
+}
+
+bool MyUDPConnection::sendTask(MyPacket &p, Address & address){
+	toSend.push_back(SendTask(p,address));
 	return true;
 }
 
@@ -181,6 +189,7 @@ int MyUDPConnection::receivePacket(MyPacket& p) {
 			//new_connection.last_send_time = time(NULL);
 			new_connection.timeoutAccumulator = 0;
 			new_connection.acks_sys.setPacketListener(this);
+			new_connection.acks_sys.address = sender;
 			new_connection.acks_sys.packetReceived(p);
 			new_connection.acks_sys.processAck(p);
 			if(cl != NULL){
@@ -211,6 +220,7 @@ MyUDPConnection::~MyUDPConnection() {
 		delete pl;
 	if(cl != NULL)
 		delete cl;
+	toSend.clear();
 }
 
 float MyUDPConnection::getTimeout() const {
@@ -229,7 +239,11 @@ void* MyUDPConnection::connectionThreadFunction(void* params) {
 	MyUDPConnection * con = (MyUDPConnection *)params;
 	MyPacket rp = MyPacket();
 	while (true){
-		con->removeDisconnected();
+		while (con->toSend.size()>0){
+			SendTask st = con->toSend.front();
+			con->sendPacket(st.p,st.address);
+			con->toSend.pop_front();
+		}
 		while (true){
 
 			int bytes_read = con->receivePacket(rp);
@@ -237,6 +251,7 @@ void* MyUDPConnection::connectionThreadFunction(void* params) {
 				break;
 		}
 		con->update(con->DeltaTime );
+		con->removeDisconnected();
 		mysleep(con->DeltaTime*1000);
 	}
 }
@@ -289,6 +304,9 @@ void MyUDPConnection::removeDisconnected() {
 }
 
 void MyUDPConnection::onPacketSent(MyPacket p, Address address) {
+	#ifndef _SYNC_PACKETS
+	if(p.getSize() > p.getHeaderSize())
+	#endif
 	cout<<"Wysłano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketSent(p,address);
@@ -296,6 +314,9 @@ void MyUDPConnection::onPacketSent(MyPacket p, Address address) {
 }
 
 void MyUDPConnection::onPacketNoneSent(MyPacket p, Address address) {
+	#ifndef _SYNC_PACKETS
+	if(p.getSize() > p.getHeaderSize())
+	#endif
 	cout<<"Nie wysłano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketNoneSent(p,address);
@@ -303,6 +324,9 @@ void MyUDPConnection::onPacketNoneSent(MyPacket p, Address address) {
 }
 
 void MyUDPConnection::onPacketReceived(MyPacket p, Address address) {
+	#ifndef _SYNC_PACKETS
+	if(p.getSize() > p.getHeaderSize())
+	#endif
 	cout<<"Odebrano: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketReceived(p,address);
@@ -310,6 +334,9 @@ void MyUDPConnection::onPacketReceived(MyPacket p, Address address) {
 }
 
 void MyUDPConnection::onPacketDelivered(MyPacket p, Address address) {
+	#ifndef _SYNC_PACKETS
+	if(p.getSize() > p.getHeaderSize())
+	#endif
 	cout<<"Dostarczony: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketDelivered(p,address);
@@ -325,10 +352,18 @@ void MyUDPConnection::setConnectionListener(ConnectionListener * cl) {
 }
 
 void MyUDPConnection::onPacketLost(MyPacket p, Address address) {
+	#ifndef _SYNC_PACKETS
+	if(p.getSize() > p.getHeaderSize())
+	#endif
 	cout<<"Zgubiony: "<<p<<endl;
 	if(pl != NULL)
 		pl->onPacketLost(p,address);
-
+	int r = p.getRetransmiting();
+	if(r > 0){
+		p.setRetransmiting(r-1);
+		cout<<"Retransmisja: "<<p<<endl;
+		sendTask(p,address);
+	}
 }
 
 void MyUDPConnection::setRttMax(float rtt) {

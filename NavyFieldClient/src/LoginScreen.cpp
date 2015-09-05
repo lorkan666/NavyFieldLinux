@@ -17,7 +17,6 @@ SimpleButton * loginButton;
 ImageView * bgd;
 LinearLayout * loginBox;
 int reconnects;
-MyGame *mg;
 
 LoginScreen::LoginScreen(void)
 {
@@ -66,14 +65,15 @@ void LoginScreen::enter(){
 	passEdit->setFillParent(true,false);
 	passEdit->setText("polifons");
 
-	mg = (MyGame*)game;
+	MyGame *mg = (MyGame*)game;
 	mg->connection->setConnectionListener(this);
 	mg->connection->setPacketListener(this);
 	loginButton->setOnMouseClickCallback(
 			[mg,&logEdit,&passEdit](int x, int y, View * v){
 				MyPacket p = LoginPacket(logEdit->getText(),passEdit->getText());
+				p.setRetransmiting(3);
 				mg->connection->connect(mg->server_address);
-				mg->connection->sendPacket(p,mg->server_address);
+				mg->connection->sendTask(p,mg->server_address);
 			});
 }
 
@@ -106,11 +106,13 @@ void LoginScreen::onPacketNoneSent(MyPacket p, Address address) {
 
 void LoginScreen::onPacketReceived(MyPacket p, Address address) {
 	unsigned char * code = (unsigned char * )p.getDataPointer();
-	 int * test = ( int * )p.getDataPointer();
-	cout<<*test<<endl;
 	switch(*code){
 	case 0xC1:{
-			this->game->changeScreen("port");
+			if(*(code+1) == 1)
+				this->game->changeScreen("port");
+			else{
+				//nieprawidlowy login lub haslo
+			}
 		}
 		break;
 	}
@@ -120,6 +122,7 @@ void LoginScreen::onPacketDelivered(MyPacket p, Address address) {
 }
 
 void LoginScreen::onPacketLost(MyPacket p, Address address) {
+
 }
 
 LoginScreen::~LoginScreen(void)

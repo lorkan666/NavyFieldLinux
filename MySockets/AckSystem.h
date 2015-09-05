@@ -18,6 +18,7 @@ class AckSystem {
 public:
 	AckSystem();
 	AckSystem(unsigned int max_sequence);
+	Address address;
 	void packetSent(MyPacket p );
 	void packetReceived(MyPacket p );
 	void setPacketListener(PacketListener * pl);
@@ -26,6 +27,7 @@ public:
 	void processAck(MyPacket p);
 	void update( float deltaTime );
 	int bitIndexAck( unsigned int sequence, unsigned int ack, unsigned int max_sequence );
+	float rtt_maximum;					// maximum expected round trip time (hard coded to one second for the moment)
 
 	virtual ~AckSystem();
 	class MyPacketList: public std::list<MyPacket> {
@@ -141,7 +143,7 @@ private:
 	float sent_bandwidth;				// approximate sent bandwidth over the last second
 	float acked_bandwidth;				// approximate acked bandwidth over the last second
 	float rtt;							// estimated round trip time
-	float rtt_maximum;					// maximum expected round trip time (hard coded to one second for the moment)
+
 
 	std::vector<unsigned int> acks;		// acked packets from last set of packet receives. cleared each update!
 
