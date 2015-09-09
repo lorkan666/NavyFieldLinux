@@ -81,33 +81,36 @@ void PortScreen::enter() {
 	mg->connection->setConnectionListener(this);
 	mg->connection->setPacketListener(this);
 	iowaButton->setOnMouseClickCallback(
-			[mg](int x, int y, View * v){
-				MyPacket p = GamePacket().addUChar(0xC2).addUInt(1);
-				p.setRetransmiting(3);
-				mg->connection->connect(mg->server_address);
-				mg->connection->sendTask(p,mg->server_address);
-			});
+		[mg,this](int x, int y, View * v){
+		this->selected_ship = 1;
+		MyPacket p = GamePacket().addUChar(0xC2).addUInt(1);
+		p.setRetransmiting(3);
+		mg->connection->connect(mg->server_address);
+		mg->connection->sendTask(p,mg->server_address);
+		});
 	mushButton->setOnMouseClickCallback(
-				[mg](int x, int y, View * v){
-					MyPacket p = GamePacket().addUChar(0xC2).addUInt(2);
-					p.setRetransmiting(3);
-					mg->connection->connect(mg->server_address);
-					mg->connection->sendTask(p,mg->server_address);
-				});
+		[mg,this](int x, int y, View * v){
+		this->selected_ship = 2;
+		MyPacket p = GamePacket().addUChar(0xC2).addUInt(2);
+		p.setRetransmiting(3);
+		mg->connection->connect(mg->server_address);
+		mg->connection->sendTask(p,mg->server_address);
+		});
 	battleButton->setOnMouseClickCallback(
-				[mg](int x, int y, View * v){
-					MyPacket p = GamePacket().addUChar(0xC3);
-					p.setRetransmiting(3);
-					mg->connection->connect(mg->server_address);
-					mg->connection->sendTask(p,mg->server_address);
-				});
+		[mg](int x, int y, View * v){
+		MyPacket p = GamePacket().addUChar(0xC3);
+		p.setRetransmiting(3);
+		mg->connection->connect(mg->server_address);
+		mg->connection->sendTask(p,mg->server_address);
+		});
 	logoutButton->setOnMouseClickCallback(
-				[mg](int x, int y, View * v){
-					MyPacket p = GamePacket().addUChar(0xC4);
-					p.setRetransmiting(3);
-					mg->connection->connect(mg->server_address);
-					mg->connection->sendTask(p,mg->server_address);
-				});
+		[mg](int x, int y, View * v){
+		MyPacket p = GamePacket().addUChar(0xC4);
+		p.setRetransmiting(3);
+		mg->connection->connect(mg->server_address);
+		mg->connection->sendTask(p,mg->server_address);
+		mg->connection->disconnect(mg->server_address);
+		});
 }
 
 void PortScreen::leave() {

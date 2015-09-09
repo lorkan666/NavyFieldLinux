@@ -98,6 +98,7 @@ void MyUDPConnection::disconnect(Address address) {
 	if(!virtual_connections.contains(address))
 		return;
 	ConnectionInfo *ci = virtual_connections.get(address);
+	ci->keeping_alive=false;
 	ci->setState(ConnectionInfo::Disconnected);
 	virtual_connections.remove(address);
 }
@@ -239,6 +240,7 @@ void* MyUDPConnection::connectionThreadFunction(void* params) {
 	MyUDPConnection * con = (MyUDPConnection *)params;
 	MyPacket rp = MyPacket();
 	while (true){
+		con->removeDisconnected();
 		while (con->toSend.size()>0){
 			SendTask st = con->toSend.front();
 			con->sendPacket(st.p,st.address);
@@ -251,7 +253,6 @@ void* MyUDPConnection::connectionThreadFunction(void* params) {
 				break;
 		}
 		con->update(con->DeltaTime );
-		con->removeDisconnected();
 		mysleep(con->DeltaTime*1000);
 	}
 }
